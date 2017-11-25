@@ -9,7 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lightsail"
-	"github.com/aws/aws-sdk-go/aws/awserr"
+	// "github.com/aws/aws-sdk-go/aws/awserr"
+	"strings"
 )
 
 func main() {
@@ -31,6 +32,12 @@ func main() {
 		}
 	}
 
+	bundles, err := svc.GetBundles(&lightsail.GetBundlesInput{})
+	for _, b := range bundles.Bundles {
+		fmt.Println(*b.BundleId, "cpu:", *b.CpuCount, "ram:", *b.RamSizeInGb, "ec2:", *b.InstanceType, "|", strings.Join(aws.StringValueSlice(b.SupportedPlatforms), ";"))
+	}
+
+	/*
 	pubKey := `ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQbExl6xdd9bK0N7C3uh48z6tpb7YbKue8KC6op0+b/r4QtPcahxcNdYc3ZLvZVVrDENpTO4HFUQsCkxe+zaBtThmr8YgPca7SkN0USxp6v+QeTL9UBiJeW1zgW4NnxOAxrQm1FAMim/pYeTHuzJkBfKHLakK76uydZHPr40wjkqzuNSvqS3jf5HLOJKAixEB3K4ZxxZiNK3hZhBzBFO/HbnEakG/cspuLxo6Go+c4FT+i7C4dmD3jvVJB/5tbbq+nG5qAc4D604095n4/3KpvCCqbQUaOmIGfnD/YRONS+5NlMeBEErwAV/zW/KreS85Vn7FvKaZiRtkxLlNoH/mr tamal@appscode.com`
 	r1, err := svc.ImportKeyPair(&lightsail.ImportKeyPairInput{
 		KeyPairName:     aws.String("b2"),
@@ -69,4 +76,5 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println(r4)
+	*/
 }
